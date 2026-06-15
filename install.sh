@@ -15,7 +15,7 @@ error() { echo -e "${BOLD}${RED}[ERR]${RESET} $*"; exit 1; }
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKUP_DIR="$HOME/.config/dotfiles_backup_$(date +%Y%m%d_%H%M%S)"
 
-CONFIG_FOLDERS=("hypr" "waybar" "swaync" "rofi")
+CONFIG_FOLDERS=("hypr" "waybar" "swaync" "rofi" "kitty")
 
 info "Starting minimalist black & red rice deployment..."
 
@@ -23,12 +23,11 @@ if [ ! -d "$DOTFILES_DIR/.config" ]; then
     error "Could not locate the .config tracker directory. Please execute inside the repo root directory."
 fi
 
-
 mkdir -p "$BACKUP_DIR"
 
 for folder in "${CONFIG_FOLDERS[@]}"; do
     TARGET_PATH="$HOME/.config/$folder"
-   REPO_PATH="$DOTFILES_DIR/.config/$folder"
+    REPO_PATH="$DOTFILES_DIR/.config/$folder"
 
     if [ -d "$TARGET_PATH" ] || [ -f "$TARGET_PATH" ]; then
         warn "Existing config discovered at ~/.config/$folder. Creating safe system backup..."
@@ -40,6 +39,18 @@ for folder in "${CONFIG_FOLDERS[@]}"; do
     info "Linking module: ~/.config/$folder -> $REPO_PATH"
     ln -s "$REPO_PATH" "$TARGET_PATH"
 done
+
+WALLPAPER_TARGET="$HOME/wallpaper"
+WALLPAPER_REPO="$DOTFILES_DIR/wallpaper"
+
+if [ -d "$WALLPAPER_REPO" ]; then
+    if [ -d "$WALLPAPER_TARGET" ] || [ -f "$WALLPAPER_TARGET" ]; then
+        warn "Existing wallpaper folder or file discovered at ~/wallpaper. Backing up..."
+        mv "$WALLPAPER_TARGET" "$BACKUP_DIR/"
+    fi
+    info "Linking wallpaper directory: ~/wallpaper -> $WALLPAPER_REPO"
+    ln -s "$WALLPAPER_REPO" "$WALLPAPER_TARGET"
+fi
 
 info "Applying execute permissions to system scripts..."
 chmod +x "$DOTFILES_DIR/.config/waybar/scripts/launch.sh" 2>/dev/null || true
