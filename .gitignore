@@ -1,0 +1,16 @@
+# .gitignore
+
+*history*
+*credentials*
+*token*
+.env
+
+
+.cache/
+.mozilla/
+.var/app/
+
+
+.ssh/
+.gnupg/
+*NetworkManager/system-connections/*
