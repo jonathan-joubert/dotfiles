@@ -53,7 +53,7 @@ local reloadWaybar 	= "~/.config/waybar/scripts/launch.sh"
  hl.on("hyprland.start", function () 
 --   hl.exec_cmd(terminal)
 --   hl.exec_cmd("nm-applet")
-   hl.exec_cmd("awww-daemon & waybar & swaync")
+   hl.exec_cmd("awww-daemon & sleep 1 && awww img \"$HOME/Pictures/wallpaper/wallpaper.png\" & waybar & swaync")
  end)
 
 
