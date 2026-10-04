@@ -1,303 +1,579 @@
-# Dotfiles
+# Minimalist Black & Red Hyprland Rice
 
-A minimalist black and crimson accented desktop environment built around **Hyprland** with a Lua-based configuration.
+A minimalist black and red Hyprland desktop configuration for Fedora.
 
----
+This rice uses a Lua-based Hyprland configuration together with Waybar, SwayNC, Rofi-Wayland, Kitty and `awww`.
 
-## What the Installer Does
-
-The `install.sh` script automates the complete setup of the desktop environment on **Fedora Workstation**.
-
-It will:
-
-* Verify that the system is running Fedora.
-* Verify that the repository contains the required configuration and wallpaper files.
-* Safely back up existing configurations from `~/.config/`.
-* Create symbolic links from this repository into `~/.config/`.
-* Enable the required COPR repositories.
-* Install Hyprland and all required system packages.
-* Install JetBrains Mono Nerd Font.
-* Install and configure `awww` for wallpaper management.
-* Copy the repository wallpaper to the user's Pictures directory.
-* Apply executable permissions to required launcher scripts.
-* Install `pwvucontrol` through Flatpak when Flatpak is available.
-
-No manual package installation is required.
+The repository is designed to be installed using the included `install.sh` script.
 
 ---
 
-## System Components
+## Features
 
-| Component            | Software                                                                       |
-| -------------------- | ------------------------------------------------------------------------------ |
-| Window Manager       | [Hyprland](https://hypr.land/)                                                 |
-| Configuration        | Hyprland Lua                                                                   |
-| Wallpaper Daemon     | awww                                                                           |
-| Status Panel         | [Waybar](https://github.com/Alexays/Waybar)                                    |
-| Notifications        | [SwayNotificationCenter](https://github.com/ErikReider/SwayNotificationCenter) |
-| Application Launcher | [Rofi-Wayland](https://github.com/marvinhacker/rofi-wayland)                   |
-| Terminal Emulator    | [Kitty](https://sw.kovidgoyal.net/kitty/)                                      |
-| File Manager         | Dolphin                                                                        |
-| Audio Mixer          | pwvucontrol                                                                    |
-| Fonts                | JetBrains Mono + JetBrains Mono Nerd Font                                      |
+- Hyprland
+- Lua-based Hyprland configuration
+- Waybar
+- SwayNC
+- Rofi-Wayland
+- Kitty
+- Dolphin
+- `awww` wallpaper daemon
+- JetBrains Mono
+- JetBrains Mono Nerd Font
+- `pwvucontrol`
+- Brightness controls
+- Media controls
+- Custom Waybar scripts
+- Custom Rofi launchers
+- Automatic wallpaper installation
+- Automatic configuration backups
+- Repository-based configuration symlinks
 
 ---
 
 ## Requirements
 
-The installer is currently designed for:
+This rice is designed for:
 
-* Fedora Linux
-* A working internet connection
-* `sudo` access
-* Git
+- Fedora Linux
+- Hyprland
+- A Wayland session
 
-The installer automatically handles the remaining dependencies.
+The installer enables the following COPRs:
+
+- `nett00n/hyprland`
+- `ackerman/nexus`
+
+These provide the Hyprland ecosystem packages and `awww` used by the rice.
 
 ---
 
 ## Installation
 
-### 1. Clone the Repository
+Clone or download this repository:
 
 ```bash
-git clone https://github.com/jonathan-joubert/dotfiles.git ~/dotfiles
-```
+git clone <repository-url>
+cd dotfiles
+````
 
-### 2. Enter the Repository
-
-```bash
-cd ~/dotfiles
-```
-
-### 3. Run the Installer
+Make the installer executable:
 
 ```bash
 chmod +x install.sh
+```
+
+Run it as your normal user:
+
+```bash
 ./install.sh
 ```
 
-The installer will automatically install and configure the required components.
+### Do not run the installer as root
 
-### 4. Start Hyprland
+Run:
 
-Once installation is complete, log out of the current desktop session and select **Hyprland** from the login screen.
+```bash
+./install.sh
+```
+
+Do **not** run:
+
+```bash
+sudo ./install.sh
+```
+
+The installer will use `sudo` itself when elevated privileges are required.
 
 ---
 
-## Installed Packages
+## What the installer does
 
-The installer installs the following Fedora packages:
+The installer performs the following steps:
 
-```text
-hyprland
-hyprland-guiutils
-awww
-waybar
-swaync
-rofi-wayland
-kitty
-dolphin
-brightnessctl
-playerctl
-jetbrains-mono-fonts
-curl
-unzip
-```
-
-It also enables the following COPR repositories:
-
-```text
-nett00n/hyprland
-ackerman/nexus
-```
-
-The `ackerman/nexus` repository provides the `awww` wallpaper daemon package.
+1. Detects the repository location.
+2. Verifies the required configuration directories.
+3. Verifies the included wallpaper.
+4. Installs required Fedora dependencies.
+5. Detects existing configurations.
+6. Safely backs up existing configurations.
+7. Creates configuration symlinks.
+8. Enables the required COPRs.
+9. Installs the required system packages.
+10. Installs JetBrains Mono Nerd Font if necessary.
+11. Copies the wallpaper to the user's Pictures directory.
+12. Applies executable permissions to included scripts.
+13. Installs `pwvucontrol` through Flatpak.
+14. Reloads Hyprland when an active Hyprland session is detected.
+15. Refreshes Waybar and SwayNC when they are already running.
+16. Starts `awww` and applies the wallpaper when possible.
 
 ---
 
-## Fonts
+## Configuration Symlinks
 
-The installer installs both:
-
-* JetBrains Mono
-* JetBrains Mono Nerd Font
-
-The Nerd Font is downloaded automatically and installed locally at:
+The installer creates the following symlinks:
 
 ```text
-~/.local/share/fonts/JetBrainsMono
+~/.config/hypr    -> repository/.config/hypr
+~/.config/waybar  -> repository/.config/waybar
+~/.config/swaync  -> repository/.config/swaync
+~/.config/rofi    -> repository/.config/rofi
+~/.config/kitty   -> repository/.config/kitty
 ```
 
-The font cache is refreshed automatically after installation.
+This means the live configuration is directly connected to the Git repository.
 
-This ensures that the icons used throughout the rice display correctly on a fresh installation.
+For example:
+
+```text
+~/.config/hypr
+        ↓
+repository/.config/hypr
+```
+
+Changes made to the repository are therefore reflected in the live configuration.
+
+---
+
+## Important: Do Not Move the Repository
+
+Because the configuration directories are symlinks, **do not rename or move the repository after running the installer**.
+
+For example, if the installer creates:
+
+```text
+/home/user/Downloads/dotfiles-main/dotfiles-main
+```
+
+and the repository is later renamed or moved, the symlinks will point to the old location.
+
+If you need to move the repository, simply run the installer again from its new location.
+
+The installer will back up the existing configuration links and recreate them using the new repository path.
+
+---
+
+## Existing Configuration Backups
+
+The installer does not simply delete an existing configuration.
+
+Before replacing an existing configuration, it creates a timestamped backup:
+
+```text
+~/.config/dotfiles_backup_YYYYMMDD_HHMMSS/
+```
+
+For example:
+
+```text
+~/.config/dotfiles_backup_20261004_203000/
+```
+
+Existing configurations such as:
+
+```text
+~/.config/hypr
+~/.config/waybar
+~/.config/swaync
+~/.config/rofi
+~/.config/kitty
+```
+
+are moved into the backup directory before the new symlinks are created.
+
+This allows the previous configuration to be recovered if necessary.
+
+The installer can also handle existing configurations that require elevated permissions.
 
 ---
 
 ## Wallpaper
 
-The repository contains the default wallpaper at:
+The repository contains:
 
 ```text
 wallpaper/wallpaper.png
 ```
 
-During installation, it is copied to:
+The installer copies it to:
 
 ```text
 ~/Pictures/wallpaper/wallpaper.png
 ```
 
-The Hyprland Lua configuration starts `awww` and loads the wallpaper from the user's home directory.
+The Hyprland configuration uses `awww` rather than `hyprpaper`.
 
-This means the configuration does **not** contain a hardcoded username or home directory.
-
-The wallpaper is managed by **awww** rather than `hyprpaper`.
-
----
-
-## Configuration Structure
-
-The repository mirrors the configuration directories used by the desktop environment:
-
-```text
-dotfiles/
-├── .config/
-│   ├── hypr/
-│   ├── kitty/
-│   ├── rofi/
-│   ├── swaync/
-│   └── waybar/
-├── wallpaper/
-│   └── wallpaper.png
-├── install.sh
-└── README.md
-```
-
-The installer creates symbolic links such as:
-
-```text
-~/.config/hypr    -> ~/dotfiles/.config/hypr
-~/.config/kitty   -> ~/dotfiles/.config/kitty
-~/.config/rofi    -> ~/dotfiles/.config/rofi
-~/.config/swaync  -> ~/dotfiles/.config/swaync
-~/.config/waybar  -> ~/dotfiles/.config/waybar
-```
-
-Changes made inside the repository therefore immediately apply to the live configuration.
-
----
-
-## Automatic Backups
-
-Before creating configuration symlinks, the installer checks for existing configuration directories.
-
-If an existing configuration is found, it is moved into a timestamped backup directory:
-
-```text
-~/.config/dotfiles_backup_YYYYMMDD_HHMMSS
-```
-
-For example:
-
-```text
-~/.config/dotfiles_backup_20261004_194500
-```
-
-This prevents the installer from overwriting an existing configuration.
-
----
-
-## Audio Controls
-
-If Flatpak is available, the installer attempts to install:
-
-```text
-com.saivert.pwvucontrol
-```
-
-This provides a graphical PipeWire/PulseAudio volume mixer for controlling applications and audio devices.
-
-If Flatpak is unavailable or the installation fails, the rest of the setup continues.
-
----
-
-## Desktop Keybindings
-
-The system modifier key is mapped to the **SUPER** key (Windows key).
-
-| Key Combination       | Action                          |
-| --------------------- | ------------------------------- |
-| `SUPER + RETURN`      | Launch Kitty terminal           |
-| `SUPER + SHIFT + Q`   | Close active window             |
-| `SUPER + D`           | Open Rofi application launcher  |
-| `SUPER + E`           | Open Dolphin file manager       |
-| `SUPER + F`           | Toggle floating window          |
-| `SUPER + R`           | Reload Waybar                   |
-| `SUPER + L`           | Lock/session utilities          |
-| `SUPER + Left`        | Move focus left                 |
-| `SUPER + Right`       | Move focus right                |
-| `SUPER + Up`          | Move focus up                   |
-| `SUPER + Down`        | Move focus down                 |
-| `SUPER + 1–0`         | Switch workspace                |
-| `SUPER + SHIFT + 1–0` | Move active window to workspace |
-
----
-
-## Wallpaper Management
-
-The desktop uses **awww** to manage wallpapers.
-
-The Hyprland startup configuration launches the wallpaper daemon and loads:
-
-```text
-~/Pictures/wallpaper/wallpaper.png
-```
-
-To manually change the wallpaper:
+The wallpaper can also be manually applied with:
 
 ```bash
 awww img ~/Pictures/wallpaper/wallpaper.png
 ```
 
-The `awww` daemon must be running before issuing wallpaper commands.
+---
+
+## awww
+
+This rice uses [`awww`](https://github.com/awww-rs/awww) for wallpapers.
+
+The Hyprland startup configuration starts the daemon and applies:
+
+```text
+~/Pictures/wallpaper/wallpaper.png
+```
+
+If `awww-daemon` is already running, the installer will reuse it rather than starting another daemon.
+
+---
+
+## Configuration Structure
+
+```text
+.
+├── .config/
+│   ├── hypr/
+│   │   ├── hyprland.lua
+│   │   └── ...
+│   │
+│   ├── kitty/
+│   │   ├── kitty.conf
+│   │   ├── custom.conf
+│   │   └── ...
+│   │
+│   ├── rofi/
+│   │   └── ...
+│   │
+│   ├── swaync/
+│   │   └── ...
+│   │
+│   └── waybar/
+│       ├── config.jsonc
+│       ├── style.css
+│       └── scripts/
+│
+├── wallpaper/
+│   └── wallpaper.png
+│
+├── install.sh
+└── README.md
+```
+
+---
+
+## Hyprland
+
+The Hyprland configuration uses the Lua API provided by modern Hyprland versions.
+
+The main configuration is:
+
+```text
+.config/hypr/hyprland.lua
+```
+
+The configuration handles:
+
+* Keybinds
+* Workspaces
+* Window rules
+* Animations
+* Startup applications
+* Wallpaper startup
+* Waybar startup
+* SwayNC startup
+* General Hyprland behavior
+
+---
+
+## Waybar
+
+Waybar configuration is located at:
+
+```text
+.config/waybar/
+```
+
+The directory contains:
+
+```text
+config.jsonc
+style.css
+colours/
+scripts/
+```
+
+The included scripts are automatically given executable permissions by the installer.
+
+---
+
+## SwayNC
+
+SwayNC configuration is located at:
+
+```text
+.config/swaync/
+```
+
+It provides the notification daemon and notification center used by the rice.
+
+---
+
+## Rofi
+
+Rofi-Wayland configuration is located at:
+
+```text
+.config/rofi/
+```
+
+Custom launcher scripts are included under:
+
+```text
+.config/rofi/launchers/
+```
+
+---
+
+## Kitty
+
+Kitty configuration is located at:
+
+```text
+.config/kitty/
+```
+
+The configuration includes the rice's terminal appearance and color configuration.
+
+`custom.conf` is intentionally available as a local override file.
+
+Personal Kitty settings can therefore be placed in:
+
+```text
+~/.config/kitty/custom.conf
+```
+
+without modifying the main configuration.
 
 ---
 
 ## Updating the Rice
 
-Because the configuration directories are symbolic links to the repository, updating the repository automatically updates the configuration.
+Because the configuration directories are symlinked to the repository, updating the Git repository updates the source configuration directly.
 
 From the repository:
 
 ```bash
-cd ~/dotfiles
 git pull
 ```
 
-Then reload Hyprland if necessary.
-
-For example:
+Then reload Hyprland:
 
 ```bash
 hyprctl reload
 ```
 
+If Waybar or another component does not automatically reload its configuration, restart that component.
+
+For example:
+
+```bash
+pkill waybar
+waybar &
+```
+
+The installer can also be run again if required:
+
+```bash
+./install.sh
+```
+
+Existing configurations will be backed up before being replaced.
+
 ---
 
-## Repository
+## Applying the Wallpaper Manually
 
-GitHub:
+```bash
+awww img ~/Pictures/wallpaper/wallpaper.png
+```
 
-https://github.com/jonathan-joubert/dotfiles
+If the daemon is not running:
+
+```bash
+awww-daemon &
+```
+
+Then:
+
+```bash
+awww img ~/Pictures/wallpaper/wallpaper.png
+```
 
 ---
 
-## Screenshots
+## Troubleshooting
 
-<img width="2560" height="1440" alt="3" src="https://github.com/user-attachments/assets/c3aef272-6125-4ad9-bd13-900c9723240d" />
+### Check Hyprland configuration
 
-<img width="2560" height="1440" alt="2" src="https://github.com/user-attachments/assets/ae390890-2913-4e0c-be47-ba0a871a4210" />
+```bash
+hyprctl reload
+```
 
-<img width="2559" height="1439" alt="1" src="https://github.com/user-attachments/assets/20ddd55f-02af-446d-bcfc-ce9178ce5d44" />
+If there is a configuration error, check:
+
+```bash
+hyprctl reload
+```
+
+for the reported error.
+
+---
+
+### Check configuration symlinks
+
+Run:
+
+```bash
+ls -ld ~/.config/hypr
+ls -ld ~/.config/waybar
+ls -ld ~/.config/swaync
+ls -ld ~/.config/rofi
+ls -ld ~/.config/kitty
+```
+
+Each should point into the repository.
+
+You can also resolve them with:
+
+```bash
+readlink -f ~/.config/hypr
+readlink -f ~/.config/waybar
+readlink -f ~/.config/swaync
+readlink -f ~/.config/rofi
+readlink -f ~/.config/kitty
+```
+
+---
+
+### Check Waybar
+
+Run:
+
+```bash
+waybar
+```
+
+If Waybar is already running:
+
+```bash
+pkill waybar
+waybar &
+```
+
+---
+
+### Check SwayNC
+
+Run:
+
+```bash
+swaync
+```
+
+If it is already running:
+
+```bash
+pkill swaync
+swaync &
+```
+
+---
+
+### Check awww
+
+Check whether the daemon is running:
+
+```bash
+pgrep -a awww
+```
+
+Start it if necessary:
+
+```bash
+awww-daemon &
+```
+
+Then apply the wallpaper:
+
+```bash
+awww img ~/Pictures/wallpaper/wallpaper.png
+```
+
+---
+
+### Check the current Hyprland session
+
+```bash
+echo "$HYPRLAND_INSTANCE_SIGNATURE"
+```
+
+If this returns a value, you are running inside a Hyprland session.
+
+---
+
+## Reinstalling
+
+The installer is safe to run again.
+
+```bash
+./install.sh
+```
+
+Existing configurations are backed up before the new repository symlinks are created.
+
+This is useful after:
+
+* Moving the repository
+* Changing the repository location
+* Recovering from broken symlinks
+* Reinstalling the rice
+* Updating the installation dependencies
+
+---
+
+## Removing the Rice
+
+The installer does not provide an automatic uninstall command because the user's previous configurations may need to be restored selectively.
+
+To remove the repository symlinks manually:
+
+```bash
+rm ~/.config/hypr
+rm ~/.config/waybar
+rm ~/.config/swaync
+rm ~/.config/rofi
+rm ~/.config/kitty
+```
+
+Then restore your previous configuration from the relevant:
+
+```text
+~/.config/dotfiles_backup_YYYYMMDD_HHMMSS/
+```
+
+backup directory.
+
+---
+
+## Notes
+
+This rice is designed around:
+
+* Fedora
+* Hyprland
+* Wayland
+* AMD/NVIDIA-compatible Wayland applications
+* A minimalist black and red aesthetic
+
+The configuration is intended to remain lightweight while providing the functionality expected from a complete daily-driver Hyprland desktop.
+
+Enjoy.
